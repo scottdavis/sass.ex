@@ -9,47 +9,15 @@ ifeq ($(shell uname),Darwin)
 	OPTIONS=-dynamiclib -undefined dynamic_lookup
 endif
 
-NIF_SRC=\
-	src/sass_nif.c
-
-SASS_OBJS=\
-	libsass_src/ast.o \
-	libsass_src/base64vlq.o \
-	libsass_src/bind.o \
-	libsass_src/constants.o \
-	libsass_src/context.o \
-	libsass_src/contextualize.o \
-	libsass_src/copy_c_str.o \
-	libsass_src/emscripten_wrapper.o \
-	libsass_src/error_handling.o \
-	libsass_src/eval.o \
-	libsass_src/expand.o \
-	libsass_src/extend.o \
-	libsass_src/file.o \
-	libsass_src/functions.o \
-	libsass_src/inspect.o \
-	libsass_src/output_compressed.o \
-	libsass_src/output_nested.o \
-	libsass_src/parser.o \
-	libsass_src/prelexer.o \
-	libsass_src/sass.o \
-	libsass_src/sass_interface.o \
-	libsass_src/sass2scss/sass2scss.o \
-	libsass_src/source_map.o \
-	libsass_src/to_c.o \
-	libsass_src/to_string.o \
-	libsass_src/units.o \
-	libsass_src/utf8_string.o \
-	libsass_src/util.o
-
+NIF_SRC= src/sass_nif.c
 SASS_DIR=libsass_src
 SASS_LIB=libsass.a
 
 all: sass_ex
 
 priv/sass.so: ${NIF_SRC}
-	$(MAKE) -C $(SASS_DIR) $(SASS_LIB)
-	$(CC) $(CFLAGS) $(ERLANG_FLAGS) -shared $(OPTIONS) $(NIF_SRC) -o $@ 2>&1 >/dev/null
+	$(MAKE) -C $(SASS_DIR) static -j5
+	$(CC) $(CFLAGS) $(ERLANG_FLAGS) -static -shared $(OPTIONS) $(NIF_SRC) $(SASS_DIR)/$(SASS_LIB)  -o $@ 2>&1 >/dev/null
 
 sass_ex:
 	mix compile
@@ -62,10 +30,11 @@ $(SASS_LIB):
 
 libsass_src/configure.sh:
 	git submodule update --init
+	./configure
 
 libsass_src-clean:
 	test ! -f $(SASS_LIB) || \
-	  (cd libsass_src && $(MAKE) clean)
+	  ($(MAKE) -C $(SASS_DIR) clean)
 
 sass_ex-clean:
 	rm -rf $(EBIN_DIR) test/tmp share/* _build
