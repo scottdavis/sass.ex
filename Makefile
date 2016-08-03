@@ -1,6 +1,6 @@
 ERLANG_PATH:=$(shell erl -eval 'io:format("~s~n", [lists:concat([code:root_dir(), "/erts-", erlang:system_info(version), "/include"])])' -s init stop -noshell)
 CFLAGS_SASS=-g -fPIC -O3
-CFLAGS=$(CFLAGS_SASS) -Ilibsass_src
+CFLAGS=$(CFLAGS_SASS) -Ilibsass_src -Ilibsass_src/include -Llibsass_src/lib -lsass
 ERLANG_FLAGS=-I$(ERLANG_PATH)
 CC?=clang
 EBIN_DIR=ebin
@@ -42,16 +42,14 @@ SASS_OBJS=\
 	libsass_src/utf8_string.o \
 	libsass_src/util.o
 
-SASS_LIB=libsass_src/libsass.a
+SASS_DIR=libsass_src
+SASS_LIB=libsass.a
 
 all: sass_ex
 
-priv/sass.so: ${SASS_LIB} ${NIF_SRC}
-	mkdir -p priv && \
-	$(CC) $(CFLAGS) $(ERLANG_FLAGS) -shared $(OPTIONS) \
-		$(SASS_OBJS) \
-		$(NIF_SRC) \
-		-o $@ 2>&1 >/dev/null
+priv/sass.so: ${NIF_SRC}
+	$(MAKE) -C $(SASS_DIR) $(SASS_LIB)
+	$(CC) $(CFLAGS) $(ERLANG_FLAGS) -shared $(OPTIONS) $(NIF_SRC) -o $@ 2>&1 >/dev/null
 
 sass_ex:
 	mix compile
