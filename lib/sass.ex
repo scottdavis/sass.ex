@@ -6,9 +6,9 @@ defmodule Sass do
   @doc """
     Compiles a string of SASS into a string of CSS
   """
-  def compile(string) do
+  def compile(string) when is_binary(string) do
     string
-    |> String.strip
+    |> to_charlist
     |> Sass.Compiler.compile
   end
 

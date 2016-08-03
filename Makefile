@@ -17,7 +17,7 @@ all: sass_ex
 
 priv/sass.so: ${NIF_SRC}
 	$(MAKE) -C $(SASS_DIR) static -j5
-	$(CC) $(CFLAGS) $(ERLANG_FLAGS) -static -shared $(OPTIONS) $(NIF_SRC) $(SASS_DIR)/$(SASS_LIB)  -o $@ 2>&1 >/dev/null
+	$(CC) $(CFLAGS) $(ERLANG_FLAGS) -static -shared $(OPTIONS) $(NIF_SRC) -o $@ 2>&1 >/dev/null
 
 sass_ex:
 	mix compile
