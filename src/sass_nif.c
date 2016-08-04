@@ -57,6 +57,32 @@ static char* my_enif_get_string(ErlNifEnv *env, ERL_NIF_TERM list)
   return buf;
 }
 
+struct Sass_Options* parse_sass_options(ErlNifEnv *env, Sass_Context *context, ERL_NIF_TERM map) {
+    struct Sass_Options* options = sass_context_get_options(context);
+
+    ERL_NIF_TERM key, value;
+    ErlNifMapIterator iter;
+    enif_map_iterator_create(env, map, &iter, ERL_NIF_MAP_ITERATOR_FIRST);
+
+    while (enif_map_iterator_get_pair(env, &iter, &key, &value)) {
+        if(enif_is_atom(env, key)) {
+            unsigned atom_length;
+            enif_get_atom_length(env, key, atom_length, ERL_NIF_LATIN1)
+            char* _key = (char*)malloc()
+            int enif_get_atom_length(ErlNifEnv* env, ERL_NIF_TERM term, unsigned* len, ErlNifCharEncoding encode)
+            enif_get_atom(ErlNifEnv* env, ERL_NIF_TERM term, char* buf, unsigned size, ErlNifCharEncoding encode)
+         // key is atom 
+        }
+        if(enif_is_binary(env, value)) {
+            //binary string
+        }
+        enif_map_iterator_next(env, &iter);
+    }
+    enif_map_iterator_destroy(env, &iter);
+
+    return options;
+}
+
 static ERL_NIF_TERM sass_compile_nif(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
   ERL_NIF_TERM ret;
