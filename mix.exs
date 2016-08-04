@@ -1,4 +1,4 @@
-Code.require_file "lib/mix/tasks/compile.sass.ex"
+Code.require_file "lib/mix/tasks/compile.libsass.ex"
 
 defmodule Sass.Mixfile do
   use Mix.Project

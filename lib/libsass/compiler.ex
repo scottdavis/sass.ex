@@ -9,7 +9,7 @@ defmodule Sass.Compiler do
     Loads the sass.so library
   """
   def init do
-    path = :filename.join(:code.priv_dir(:sass), 'sass_nif')
+    path = :filename.join(:code.priv_dir(:libsass), 'sass_nif')
     :ok = :erlang.load_nif(path, 0)
   end
 
