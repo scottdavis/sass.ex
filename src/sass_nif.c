@@ -102,57 +102,66 @@ static ERL_NIF_TERM sass_compile_nif(ErlNifEnv* env, int argc, const ERL_NIF_TER
   return ret;
 }
 
-/*static ERL_NIF_TERM sass_compile_file_nif(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])*/
-/*{*/
-  /*ErlNifBinary input_binary;*/
-  /*ERL_NIF_TERM ret;*/
+static ERL_NIF_TERM sass_compile_file_nif(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
+{
+  ERL_NIF_TERM ret;
 
-  /*if (argc != 1) {*/
-    /*return enif_make_badarg(env);*/
-  /*}*/
+  if (argc != 1) {
+    return enif_make_badarg(env);
+  }
 
-  /*if(!enif_inspect_binary(env, argv[0], &input_binary)){*/
-    /*return enif_make_badarg(env);*/
-  /*}*/
 
-  /*char directory[PATH_MAX];*/
-  /*getcwd(directory, sizeof(directory));*/
+  char* sass_file = (char*)malloc(my_enif_list_size(env, argv[0]));
+  memcpy(sass_file, my_enif_get_string(env, argv[0]), my_enif_list_size(env, argv[0]) + 2);
 
-  /*char * path = malloc(strlen(directory) + strlen((char*)input_binary.data) + 2);*/
-  /*strcpy(path, directory);*/
-  /*strcat(path, "/");*/
-  /*strcat(path, (char*)input_binary.data);*/
+  if(!sass_file) {
+    return enif_make_badarg(env);
+  }
 
-  /*struct sass_file_context* ctx = sass_new_file_context();*/
-  /*ctx->options.include_paths = "";*/
-  /*ctx->options.output_style = SASS_STYLE_NESTED;*/
-  /*ctx->input_path = path;*/
+   char cwd[1024];
+   if (getcwd(cwd, sizeof(cwd)) == NULL) {
+        perror("getcwd() error");
+   }
 
-  /*sass_compile_file(ctx);*/
-  /*if (ctx->error_status) {*/
-    /*if (ctx->error_message) {*/
-      /*ret = make_tuple(env, ctx->error_message, "error");*/
-    /*} else {*/
-      /*ret = make_tuple(env, "An error occured; no error message available.", "error");*/
-    /*}*/
-  /*} else if (ctx->output_string) {*/
-    /*ret = make_tuple(env, ctx->output_string, "ok");*/
-  /*} else {*/
-    /*ret = make_tuple(env, "Unknown internal error.", "error");*/
-  /*}*/
-  /*sass_free_file_context(ctx);*/
+  char * path = (char*)malloc(strlen(cwd) + strlen(sass_file) + 2);
+  strcpy(path, cwd);
+  strcat(path, "/");
+  strcat(path, sass_file);
+  free(sass_file);
 
-  /*return ret;*/
-/*}*/
+  // create the file context and get all related structs
+  struct Sass_File_Context* file_ctx = sass_make_file_context(path);
+  struct Sass_Context* ctx = sass_file_context_get_context(file_ctx);
+  struct Sass_Options* options = sass_context_get_options(ctx);
 
-/*static int on_load(ErlNifEnv* env, void** priv_data, ERL_NIF_TERM load_info)*/
-/*{*/
-  /*return 0;*/
-/*}*/
+  // configure some options ...
+  sass_option_set_precision(options, 5);
+  sass_option_set_output_style(options, SASS_STYLE_NESTED);
+
+  int error_status = sass_compile_file_context(file_ctx);
+
+  const char *error_message = sass_context_get_error_message(ctx);
+  const char *output_string = sass_context_get_output_string(ctx);
+
+  if (error_status) {
+    if (error_message) {
+      ret = make_tuple(env, error_message, "error");
+    } else {
+      ret = make_tuple(env, "An error occured; no error message available.", "error");
+    }
+  } else if (output_string) {
+    ret = make_tuple(env, output_string, "ok");
+  } else {
+    ret = make_tuple(env, "Unknown internal error.", "error");
+  }
+  sass_delete_file_context(file_ctx);
+
+  return ret;
+}
 
 static ErlNifFunc nif_funcs[] = {
   { "compile", 1, sass_compile_nif, 0 },
-  /*{ "compile_file", 1, sass_compile_file_nif },*/
+  { "compile_file", 1, sass_compile_file_nif, 0 },
 };
 
 ERL_NIF_INIT(Elixir.Sass.Compiler, nif_funcs, NULL, NULL, NULL, NULL);

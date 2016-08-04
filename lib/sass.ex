@@ -12,13 +12,14 @@ defmodule Sass do
     |> Sass.Compiler.compile
   end
 
-  #@doc """
-    #Compiles a file of SASS into a string of CSS
-  #"""
-  #def compile_file(path) do
-    #path
-    #|> String.strip
-    #|> Sass.Compiler.compile_file
-  #end
+  @doc """
+    Compiles a file of SASS into a string of CSS
+  """
+  def compile_file(path) do
+    path
+    |> String.strip
+    |> to_charlist
+    |> Sass.Compiler.compile_file
+  end
 
 end

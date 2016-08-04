@@ -20,11 +20,11 @@ defmodule Sass.Compiler do
     exit(:nif_library_not_loaded)
   end
 
- #@doc """
-    #A noop that gets overwritten by the NIF compile_file
-  #"""
-  #def compile_file(_) do
-    #exit(:nif_library_not_loaded)
-  #end
+ @doc """
+    A noop that gets overwritten by the NIF compile_file
+  """
+  def compile_file(_) do
+    exit(:nif_library_not_loaded)
+  end
 
 end
