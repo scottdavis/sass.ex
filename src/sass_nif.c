@@ -57,13 +57,13 @@ static char* my_enif_get_string(ErlNifEnv *env, ERL_NIF_TERM list)
 
 static ERL_NIF_TERM sass_compile_nif(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
-  ErlNifBinary input_binary;
   ERL_NIF_TERM ret;
 
   if (argc != 1) {
     return enif_make_badarg(env);
   }
-  char* sass_string = malloc(my_enif_list_size(env, argv[0]));
+
+  char* sass_string = (char*)malloc(my_enif_list_size(env, argv[0]));
   memcpy(sass_string, my_enif_get_string(env, argv[0]), my_enif_list_size(env, argv[0]) + 2);
 
   if(!sass_string) {
@@ -145,13 +145,13 @@ static ERL_NIF_TERM sass_compile_nif(ErlNifEnv* env, int argc, const ERL_NIF_TER
   /*return ret;*/
 /*}*/
 
-static int on_load(ErlNifEnv* env, void** priv_data, ERL_NIF_TERM load_info)
-{
-  return 0;
-}
+/*static int on_load(ErlNifEnv* env, void** priv_data, ERL_NIF_TERM load_info)*/
+/*{*/
+  /*return 0;*/
+/*}*/
 
 static ErlNifFunc nif_funcs[] = {
-  { "compile", 1, sass_compile_nif },
+  { "compile", 1, sass_compile_nif, 0 },
   /*{ "compile_file", 1, sass_compile_file_nif },*/
 };
 
