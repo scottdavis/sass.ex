@@ -1,6 +1,5 @@
-# Sass.ex
-Elixir NIF for [libsass](https://github.com/sass/libsass).
-
+# Libsass.ex
+Libsass bindings for elixir
 ## Use
 
 ```shell
@@ -16,16 +15,6 @@ Sass.compile_file "test/sample_scss.scss"
 #=> {:ok, "/* sample_scss.scss */\n#navbar {\n  width: 80%;\n  height: 23px; }\n  #navbar ul {\n    list-style-type: none; }\n  #navbar li {\n    float: left; }\n    #navbar li a {\n      font-weight: bold; }\n"}
 ```
 
-## Roadmap
-
-Obviously this is really early release software. The plans are:
-
-- More Tests
-- Better Documentation
-- Make Hex package
-- Compile a folder(sass_folder_context)
-- Improve [the rotor](https://github.com/danielfarrell/sass_rotor)
-
 ## License
 
 [MIT/X11](./LICENSE)
@@ -34,4 +23,4 @@ Copyright (c) 2014 Daniel Farrell
 
 ## Credit
 
-Much of the code and explanation of how this could work was taken from two projects, [Discount.ex](https://github.com/asaaki/discount.ex/) and [Sassy](https://github.com/rramsden/sassy). Thanks guys!
+Based on sass.ex by [Daniel Farrell](https://github.com/danielfarrell/sass.ex)

@@ -5,13 +5,15 @@ defmodule Sass.Mixfile do
 
   def project do
     [
-      app:         :sass,
-      version:     "0.0.1",
+      app:         :libsass,
+      version:     "3.3.6",
       elixir:      "~> 1.3.0",
       compilers:   [:sass, :elixir, :app],
       deps:        deps(Mix.env),
       package:     package,
-      description: description
+      description: description,
+      compilers: [:elixir_make] ++ Mix.compilers,
+      make_clean: ["clean"],
     ]
   end
 
@@ -19,17 +21,17 @@ defmodule Sass.Mixfile do
 
   defp description do
     """
-    Elixir NIF for libsass, a Sass parser
+    Libsass for elixir
     """
   end
 
   defp package do
     [
-      contributors: ["Daniel Farrell"],
+      contributors: ["Scott Davis"],
       license:      "MIT",
       links: [
-        { "GitHub", "https://github.com/danielfarrell/sass.ex" },
-        { "Issues", "https://github.com/sanielfarrell/sass.ex/issues" },
+        { "GitHub", "https://github.com/scottdavis/libsass.ex" },
+        { "Issues", "https://github.com/scottdavis/libsass.ex/issues" },
         { "Source (sass/libsass)", "https://github.com/sass/libsass" }
       ],
       files: [
