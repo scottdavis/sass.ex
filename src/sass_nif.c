@@ -66,7 +66,7 @@ static ERL_NIF_TERM sass_compile_nif(ErlNifEnv* env, int argc, const ERL_NIF_TER
   }
 
   char* sass_string = (char*)malloc(my_enif_list_size(env, argv[0]));
-  memcpy(sass_string, my_enif_get_string(env, argv[0]), my_enif_list_size(env, argv[0]));
+  strcpy(sass_string, my_enif_get_string(env, argv[0]));
 
   if(!sass_string) {
     return enif_make_badarg(env);
@@ -114,24 +114,14 @@ static ERL_NIF_TERM sass_compile_file_nif(ErlNifEnv* env, int argc, const ERL_NI
 
 
   char* sass_file = (char*)malloc(my_enif_list_size(env, argv[0]));
-  memcpy(sass_file, my_enif_get_string(env, argv[0]), my_enif_list_size(env, argv[0]));
+  strcpy(sass_file, my_enif_get_string(env, argv[0]));
 
   if(!sass_file) {
     return enif_make_badarg(env);
   }
 
-   char cwd[1024];
-   if (getcwd(cwd, sizeof(cwd)) == NULL) {
-        perror("getcwd() error");
-   }
-
-  char * path = (char*)malloc(strlen(cwd) + strlen(sass_file) + 2);
-  strcpy(path, cwd);
-  strcat(path, "/");
-  strcat(path, sass_file);
-
   // create the file context and get all related structs
-  struct Sass_File_Context* file_ctx = sass_make_file_context(path);
+  struct Sass_File_Context* file_ctx = sass_make_file_context(sass_file);
   struct Sass_Context* ctx = sass_file_context_get_context(file_ctx);
   struct Sass_Options* options = sass_context_get_options(ctx);
 
