@@ -83,7 +83,7 @@ SASS_LIB=libsass.a
 
 # Set Erlang-specific compile and linker flags
 ERL_CFLAGS ?= -I$(ERL_EI_INCLUDE_DIR) -Llibsass_src/lib -lsass -Ilibsass_src -Ilibsass_src/include
-ERL_LDFLAGS ?= -Ilibsass_src -Ilibsass_src/include -Llibsass_src/lib -lstdc++
+ERL_LDFLAGS ?= -Ilibsass_src -Ilibsass_src/include -Llibsass_src/lib
 
 LDFLAGS += -fPIC -shared
 CFLAGS ?= -fPIC -O2 -Wall -Wextra -Wno-unused-parameter
@@ -118,7 +118,7 @@ all: libsass_src-make priv/sass_nif.so
 
 priv/sass_nif.so: src/sass_nif.o
 	@mkdir -p priv
-	$(CC) $^ $(ERL_LDFLAGS) $(LDFLAGS) -Bstatic -lsass -o $@
+	$(CC) $^ $(ERL_LDFLAGS) $(LDFLAGS) -static-libstdc++ -Bstatic -lsass -lm -lc -o $@
 
 
 clean: libsass_src-clean sass-clean
