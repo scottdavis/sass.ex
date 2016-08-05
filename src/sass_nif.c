@@ -39,7 +39,6 @@ static int my_enif_list_size(ErlNifEnv* env, ERL_NIF_TERM list)
   }
   return size;
 }
-
 static char* my_enif_get_string(ErlNifEnv *env, ERL_NIF_TERM list)
 {
   char *buf;
@@ -83,8 +82,6 @@ bool get_bool_from_atom(ErlNifEnv *env, ERL_NIF_TERM atom) {
 
 
 // Sass Options
-/*void sass_option_set_indent (struct Sass_Options* options, const char* indent);*/
-/*void sass_option_set_linefeed (struct Sass_Options* options, const char* linefeed);*/
 /*void sass_option_set_input_path (struct Sass_Options* options, const char* input_path);*/
 /*void sass_option_set_output_path (struct Sass_Options* options, const char* output_path);*/
 /*void sass_option_set_plugin_path (struct Sass_Options* options, const char* plugin_path);*/
@@ -102,10 +99,17 @@ bool get_bool_from_atom(ErlNifEnv *env, ERL_NIF_TERM atom) {
 #define SASS_OMIT_SOURCE_MAP_URL "omit_source_map_url"
 #define SASS_IS_INDENTED_SYNTAX "is_indented_syntax"
 #define SASS_INDENT "indent"
+#define SASS_LINEFEED "linefeed"
+#define SASS_INCLUDE_PATHS "include_paths"
 
 #define SASS_INDENT_SPACE "  "
 #define SASS_INDENT_TAB "\t"
 #define SASS_INDENT_TAB_ATOM "tab"
+
+#define SASS_UNIX_LINEFEED "\n"
+#define SASS_WINDOWS_LINEFEED "\r\n"
+#define SASS_LINEFEED_WINDOWS "windows"
+#define SASS_LINEFEED_UNIX "unix"
 
 struct Sass_Options* parse_sass_options(ErlNifEnv *env, Sass_Context *context, ERL_NIF_TERM map) {
     ERL_NIF_TERM key, value;
@@ -159,10 +163,49 @@ struct Sass_Options* parse_sass_options(ErlNifEnv *env, Sass_Context *context, E
     key = enif_make_atom(env, SASS_INDENT);
     if (enif_get_map_value(env, map, key, &value)) {
         if (strcmp(get_atom_string(env, value), SASS_INDENT_TAB_ATOM) == 0) {
-            sass_option_set_indent(options, SASS_INDENT_TAB);
+            sass_option_set_linefeed(options, SASS_INDENT_TAB);
         } else {
-            sass_option_set_indent(options, SASS_INDENT_SPACE);
+            sass_option_set_linefeed(options, SASS_INDENT_SPACE);
         }
+    }
+    // linefeed
+    key = enif_make_atom(env, SASS_LINEFEED);
+    if (enif_get_map_value(env, map, key, &value)) {
+        char *val = get_atom_string(env, value);
+        if (strcmp(val, SASS_LINEFEED_WINDOWS) == 0) {
+            sass_option_set_indent(options, SASS_WINDOWS_LINEFEED);
+        } else if (strcmp(val, SASS_LINEFEED_UNIX)){
+            sass_option_set_indent(options, SASS_UNIX_LINEFEED);
+        } else {
+            ERL_NIF_TERM exception = enif_make_string(env, "(Argument Error) linefeed must be ':unix' or ':windows'", ERL_NIF_LATIN1);
+            enif_raise_exception(env, exception);
+        }
+    }
+    // include paths
+    key = enif_make_atom(env, SASS_INCLUDE_PATHS);
+    if (enif_get_map_value(env, map, key, &value)) {
+        ERL_NIF_TERM head;
+        if (!enif_is_list(env, value)) {
+            ERL_NIF_TERM exception = enif_make_string(env, "(Argument Error) include_paths must be a list", ERL_NIF_LATIN1);
+            enif_raise_exception(env, exception);
+        }
+        while(!enif_is_empty_list(env, value)) {
+            char *path;
+            enif_get_list_cell(env, value, &head, &value);
+            if (enif_is_binary(env, head)) {
+                ErlNifBinary bin;
+                enif_inspect_binary(env, head, &bin);
+                path = (char*)enif_alloc(bin.size + 1);
+                strcpy(path, (const char *)bin.data);
+                path[bin.size] = '\0';
+                sass_option_push_include_path(options, path);
+                enif_free(path);
+            } else if(enif_is_list(env, head)) {
+                path = my_enif_get_string(env, head);
+                sass_option_push_include_path(options, path);
+                enif_free(path);
+            }
+        };
     }
 
     return options;
