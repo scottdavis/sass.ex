@@ -6,20 +6,22 @@ defmodule Sass do
   @doc """
     Compiles a string of SASS into a string of CSS
   """
-  def compile(string) when is_binary(string) do
-    string
-    |> to_charlist
-    |> Sass.Compiler.compile
+  def compile(string, options \\ %{output_style: sass_style_nested}) do
+    sass = string |> String.strip |> to_charlist
+    Sass.Compiler.compile(sass, options)
   end
 
   @doc """
     Compiles a file of SASS into a string of CSS
   """
-  def compile_file(path) do
-    path
-    |> String.strip
-    |> to_charlist
-    |> Sass.Compiler.compile_file
+  def compile_file(path, options \\ %{output_style: sass_style_nested}) do
+    filename = path |> String.strip |> to_charlist
+    Sass.Compiler.compile_file(filename, options)
   end
+
+  def sass_style_nested, do: 0
+  def sass_style_expanded, do: 1
+  def sass_style_compact, do: 2
+  def sass_style_compressed, do: 3
 
 end

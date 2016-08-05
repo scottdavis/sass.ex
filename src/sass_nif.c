@@ -57,28 +57,113 @@ static char* my_enif_get_string(ErlNifEnv *env, ERL_NIF_TERM list)
   return buf;
 }
 
+char* get_atom_string(ErlNifEnv *env, ERL_NIF_TERM atom) {
+        unsigned atom_size = 0;
+        char *string = NULL;
+        enif_get_atom_length(env, atom, &atom_size, ERL_NIF_LATIN1);
+        string = (char*)enif_alloc(sizeof(char) * (atom_size + 1));
+        if(!enif_get_atom(env, atom, string, (atom_size + 1), ERL_NIF_LATIN1)) {
+            enif_free(string);
+        }
+
+        return string;
+}
+
+bool get_bool_from_atom(ErlNifEnv *env, ERL_NIF_TERM atom) {
+
+        char *_bool = get_atom_string(env, atom);
+        if (strcmp(_bool, "true") == 0) {
+            enif_free(_bool);
+            return true;
+        }
+        enif_free(_bool);
+        return false;
+}
+
+
+
+// Sass Options
+/*void sass_option_set_indent (struct Sass_Options* options, const char* indent);*/
+/*void sass_option_set_linefeed (struct Sass_Options* options, const char* linefeed);*/
+/*void sass_option_set_input_path (struct Sass_Options* options, const char* input_path);*/
+/*void sass_option_set_output_path (struct Sass_Options* options, const char* output_path);*/
+/*void sass_option_set_plugin_path (struct Sass_Options* options, const char* plugin_path);*/
+/*void sass_option_set_include_path (struct Sass_Options* options, const char* include_path);*/
+/*void sass_option_set_source_map_file (struct Sass_Options* options, const char* source_map_file);*/
+/*void sass_option_set_source_map_root (struct Sass_Options* options, const char* source_map_root);*/
+/*void sass_option_set_c_functions (struct Sass_Options* options, Sass_C_Function_List c_functions);*/
+/*void sass_option_set_importer (struct Sass_Options* options, Sass_C_Import_Callback importer);*/
+
+#define SASS_OUTPUT_STYLE "output_style"
+#define SASS_PRECISION "precision"
+#define SASS_SOURCE_COMMENTS "source_comments"
+#define SASS_SOURCE_MAP_EMBED "source_map_embed"
+#define SASS_SOURCE_MAP_CONTENTS "source_map_contents"
+#define SASS_OMIT_SOURCE_MAP_URL "omit_source_map_url"
+#define SASS_IS_INDENTED_SYNTAX "is_indented_syntax"
+#define SASS_INDENT "indent"
+
+#define SASS_INDENT_SPACE "  "
+#define SASS_INDENT_TAB "\t"
+#define SASS_INDENT_TAB_ATOM "tab"
+
 struct Sass_Options* parse_sass_options(ErlNifEnv *env, Sass_Context *context, ERL_NIF_TERM map) {
+    ERL_NIF_TERM key, value;
+
     struct Sass_Options* options = sass_context_get_options(context);
 
-    ERL_NIF_TERM key, value;
-    ErlNifMapIterator iter;
-    enif_map_iterator_create(env, map, &iter, ERL_NIF_MAP_ITERATOR_FIRST);
-
-    while (enif_map_iterator_get_pair(env, &iter, &key, &value)) {
-        if(enif_is_atom(env, key)) {
-            unsigned atom_length;
-            enif_get_atom_length(env, key, atom_length, ERL_NIF_LATIN1)
-            char* _key = (char*)malloc()
-            int enif_get_atom_length(ErlNifEnv* env, ERL_NIF_TERM term, unsigned* len, ErlNifCharEncoding encode)
-            enif_get_atom(ErlNifEnv* env, ERL_NIF_TERM term, char* buf, unsigned size, ErlNifCharEncoding encode)
-         // key is atom 
-        }
-        if(enif_is_binary(env, value)) {
-            //binary string
-        }
-        enif_map_iterator_next(env, &iter);
+    if(!enif_is_map(env, map)) {
+        ERL_NIF_TERM exception = enif_make_string(env, "(Argument Error) 2nd argumanet must be a map", ERL_NIF_LATIN1);
+        enif_raise_exception(env, exception);
     }
-    enif_map_iterator_destroy(env, &iter);
+    // output style
+    key = enif_make_atom(env, SASS_OUTPUT_STYLE);
+    if (enif_get_map_value(env, map, key, &value)) {
+        int output_style;
+        enif_get_int(env, value, &output_style);
+        sass_option_set_output_style(options, (Sass_Output_Style)output_style);
+    }
+    // precision
+    key = enif_make_atom(env, SASS_PRECISION);
+    if (enif_get_map_value(env, map, key, &value)) {
+        int precision;
+        enif_get_int(env, value, &precision);
+        sass_option_set_precision(options, precision);
+    }
+    // source comments
+    key = enif_make_atom(env, SASS_SOURCE_COMMENTS);
+    if (enif_get_map_value(env, map, key, &value)) {
+        sass_option_set_source_comments(options, get_bool_from_atom(env, value));
+    }
+    // source map embed
+    key = enif_make_atom(env, SASS_SOURCE_MAP_EMBED);
+    if (enif_get_map_value(env, map, key, &value)) {
+        sass_option_set_source_map_embed(options, get_bool_from_atom(env, value));
+    }
+    // source map contents
+    key = enif_make_atom(env, SASS_SOURCE_MAP_CONTENTS);
+    if (enif_get_map_value(env, map, key, &value)) {
+        sass_option_set_source_map_contents(options, get_bool_from_atom(env, value));
+    }
+    // omit source map url
+    key = enif_make_atom(env, SASS_OMIT_SOURCE_MAP_URL);
+    if (enif_get_map_value(env, map, key, &value)) {
+        sass_option_set_omit_source_map_url(options, get_bool_from_atom(env, value));
+    }
+    // is indented syntax
+    key = enif_make_atom(env, SASS_IS_INDENTED_SYNTAX);
+    if (enif_get_map_value(env, map, key, &value)) {
+        sass_option_set_is_indented_syntax_src(options, get_bool_from_atom(env, value));
+    }
+    // indent
+    key = enif_make_atom(env, SASS_INDENT);
+    if (enif_get_map_value(env, map, key, &value)) {
+        if (strcmp(get_atom_string(env, value), SASS_INDENT_TAB_ATOM) == 0) {
+            sass_option_set_indent(options, SASS_INDENT_TAB);
+        } else {
+            sass_option_set_indent(options, SASS_INDENT_SPACE);
+        }
+    }
 
     return options;
 }
@@ -87,7 +172,7 @@ static ERL_NIF_TERM sass_compile_nif(ErlNifEnv* env, int argc, const ERL_NIF_TER
 {
   ERL_NIF_TERM ret;
 
-  if (argc != 1) {
+  if (argc > 2) {
     return enif_make_badarg(env);
   }
 
@@ -99,14 +184,10 @@ static ERL_NIF_TERM sass_compile_nif(ErlNifEnv* env, int argc, const ERL_NIF_TER
   }
 
   struct Sass_Data_Context* ctx = sass_make_data_context(sass_string);
-
   struct Sass_Context* ctx_out = sass_data_context_get_context(ctx);
-  struct Sass_Options* options = sass_context_get_options(ctx_out);
+  struct Sass_Options* options = parse_sass_options(env, ctx_out, argv[1]);
 
-  sass_option_set_output_style(options, SASS_STYLE_NESTED);
-  sass_option_set_precision(options, 5);
   sass_data_context_set_options(ctx, options);
-
 
   sass_compile_data_context(ctx);
 
@@ -125,6 +206,7 @@ static ERL_NIF_TERM sass_compile_nif(ErlNifEnv* env, int argc, const ERL_NIF_TER
   } else {
     ret = make_tuple(env, "Unknown internal error.", "error");
   }
+  // this will also free sass_string
   sass_delete_data_context(ctx);
 
   return ret;
@@ -133,8 +215,7 @@ static ERL_NIF_TERM sass_compile_nif(ErlNifEnv* env, int argc, const ERL_NIF_TER
 static ERL_NIF_TERM sass_compile_file_nif(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
   ERL_NIF_TERM ret;
-
-  if (argc != 1) {
+  if (argc > 2) {
     return enif_make_badarg(env);
   }
 
@@ -149,11 +230,10 @@ static ERL_NIF_TERM sass_compile_file_nif(ErlNifEnv* env, int argc, const ERL_NI
   // create the file context and get all related structs
   struct Sass_File_Context* file_ctx = sass_make_file_context(sass_file);
   struct Sass_Context* ctx = sass_file_context_get_context(file_ctx);
-  struct Sass_Options* options = sass_context_get_options(ctx);
+  struct Sass_Options* options = parse_sass_options(env, ctx, argv[1]);
 
-  // configure some options ...
-  sass_option_set_precision(options, 5);
-  sass_option_set_output_style(options, SASS_STYLE_NESTED);
+
+  sass_file_context_set_options(file_ctx, options);
 
   int error_status = sass_compile_file_context(file_ctx);
 
@@ -171,14 +251,15 @@ static ERL_NIF_TERM sass_compile_file_nif(ErlNifEnv* env, int argc, const ERL_NI
   } else {
     ret = make_tuple(env, "Unknown internal error.", "error");
   }
+  //this will also free sass_file
   sass_delete_file_context(file_ctx);
 
   return ret;
 }
 
 static ErlNifFunc nif_funcs[] = {
-  { "compile", 1, sass_compile_nif, 0 },
-  { "compile_file", 1, sass_compile_file_nif, 0 },
+  { "compile", 2, sass_compile_nif, 0 },
+  { "compile_file", 2, sass_compile_file_nif, 0 },
 };
 
 ERL_NIF_INIT(Elixir.Sass.Compiler, nif_funcs, NULL, NULL, NULL, NULL);

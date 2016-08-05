@@ -16,14 +16,14 @@ defmodule Sass.Compiler do
   @doc """
     A noop that gets overwritten by the NIF compile
   """
-  def compile(_) do
+  def compile(_,_) do
     exit(:nif_library_not_loaded)
   end
 
  @doc """
     A noop that gets overwritten by the NIF compile_file
   """
-  def compile_file(_) do
+  def compile_file(_,_) do
     exit(:nif_library_not_loaded)
   end
 
