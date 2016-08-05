@@ -27,5 +27,6 @@ defmodule SassTest do
     {:ok, result} = Sass.compile_file("./test/samples/app.scss", %{include_paths: ["#{System.cwd()}/test/samples/folder"]})
     assert Regex.match?(~r/background-color: #eee;/, result)
     assert Regex.match?(~r/height: 100%;/, result)
+    assert Regex.match?(~r/bar: baz;/, result)
   end
 end

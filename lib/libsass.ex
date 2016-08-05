@@ -7,7 +7,7 @@ defmodule Sass do
     Compiles a string of SASS into a string of CSS
   """
   def compile(string, options \\ %{output_style: sass_style_nested}) do
-    sass = string |> String.strip |> to_charlist
+    sass = string |> String.strip
     Sass.Compiler.compile(sass, options)
   end
 
@@ -15,7 +15,7 @@ defmodule Sass do
     Compiles a file of SASS into a string of CSS
   """
   def compile_file(path, options \\ %{output_style: sass_style_nested}) do
-    filename = path |> String.strip |> to_charlist
+    filename = path |> String.strip
     Sass.Compiler.compile_file(filename, options)
   end
 

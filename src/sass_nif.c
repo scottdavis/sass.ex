@@ -195,7 +195,7 @@ struct Sass_Options* parse_sass_options(ErlNifEnv *env, Sass_Context *context, E
             if (enif_is_binary(env, head)) {
                 ErlNifBinary bin;
                 enif_inspect_binary(env, head, &bin);
-                path = (char*)enif_alloc(bin.size + 1);
+                path = (char*)enif_alloc(strlen((const char*)bin.data) + 1);
                 strcpy(path, (const char *)bin.data);
                 path[bin.size] = '\0';
                 sass_option_push_include_path(options, path);
@@ -219,11 +219,19 @@ static ERL_NIF_TERM sass_compile_nif(ErlNifEnv* env, int argc, const ERL_NIF_TER
     return enif_make_badarg(env);
   }
 
-  char* sass_string = (char*)malloc(my_enif_list_size(env, argv[0]));
-  strcpy(sass_string, my_enif_get_string(env, argv[0]));
+  char *sass_string;
 
-  if(!sass_string) {
-    return enif_make_badarg(env);
+  if(enif_is_binary(env, argv[0])) {
+      ErlNifBinary bin;
+      enif_inspect_binary(env, argv[0], &bin);
+      sass_string = (char*)malloc(strlen((const char*)bin.data) + 1);
+      strcpy(sass_string, (const char *)bin.data);
+      sass_string[bin.size] = '\0';
+  } else if(enif_is_list(env, argv[0])) {
+      sass_string = (char*)malloc(my_enif_list_size(env, argv[0]));
+      strcpy(sass_string, my_enif_get_string(env, argv[0]));
+  } else {
+      return enif_make_badarg(env);
   }
 
   struct Sass_Data_Context* ctx = sass_make_data_context(sass_string);
@@ -262,11 +270,18 @@ static ERL_NIF_TERM sass_compile_file_nif(ErlNifEnv* env, int argc, const ERL_NI
     return enif_make_badarg(env);
   }
 
+  char *sass_file;
 
-  char* sass_file = (char*)malloc(my_enif_list_size(env, argv[0]));
-  strcpy(sass_file, my_enif_get_string(env, argv[0]));
-
-  if(!sass_file) {
+  if(enif_is_binary(env, argv[0])) {
+    ErlNifBinary bin;
+    enif_inspect_binary(env, argv[0], &bin);
+    sass_file = (char*)malloc(strlen((const char*)bin.data) + 1);
+    strcpy(sass_file, (const char *)bin.data);
+    sass_file[bin.size] = '\0';
+  } else if(enif_is_list(env, argv[0])) {
+    sass_file = (char*)malloc(my_enif_list_size(env, argv[0]));
+    strcpy(sass_file, my_enif_get_string(env, argv[0]));
+  } else {
     return enif_make_badarg(env);
   }
 
