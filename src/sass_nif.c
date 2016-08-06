@@ -320,4 +320,4 @@ static ErlNifFunc nif_funcs[] = {
   { "compile_file", 2, sass_compile_file_nif, 0 },
 };
 
-ERL_NIF_INIT(Elixir.Sass.Compiler, nif_funcs, NULL, NULL, NULL, NULL);
+ERL_NIF_INIT(Elixir.Libsass.Compiler, nif_funcs, NULL, NULL, NULL, NULL);

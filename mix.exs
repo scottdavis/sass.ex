@@ -1,6 +1,6 @@
 Code.require_file "lib/mix/tasks/compile.libsass.ex"
 
-defmodule Sass.Mixfile do
+defmodule Libsass.Mixfile do
   use Mix.Project
 
   def project do

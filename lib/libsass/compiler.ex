@@ -1,4 +1,4 @@
-defmodule Sass.Compiler do
+defmodule Libsass.Compiler do
   @moduledoc """
     Connection to the NIF for libsass
   """
