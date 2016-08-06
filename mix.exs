@@ -44,7 +44,7 @@ defmodule Sass.Mixfile do
       files: [
         "lib",
         "src",
-        "sass_src",
+        "libsass_src",
         "priv",
         "Makefile",
         "mix.exs",
