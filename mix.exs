@@ -9,11 +9,16 @@ defmodule Libsass.Mixfile do
       version:     "1.0.0",
       elixir:      "~> 1.3.0",
       compilers:   [:sass, :elixir, :app],
-      deps:        deps(Mix.env),
+      deps:        deps(),
       package:     package,
       description: description,
       compilers: [:elixir_make] ++ Mix.compilers,
       make_clean: ["clean"],
+      docs: [logo: "path/to/logo.png",
+          extras: ["README.md", "CONTRIBUTING.md"]],
+      name: "Libbsass.ex",
+      source_url: "https://github.com/scottdavis/libsass.ex",
+      homepage_url: "https://github.com/scottdavis/libsass.ex"
     ]
   end
 
