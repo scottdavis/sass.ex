@@ -51,10 +51,11 @@ defmodule Libsass.Mixfile do
 
   defp deps(:docs) do
     #[{ :ex_doc, github: "elixir-lang/ex_doc" }]
-    {:ex_doc, ">= 0.0.0", only: :dev}
   end
 
   defp deps(_) do
-    []
+    [
+      {:ex_doc, ">= 0.0.0", only: :dev}
+    ]
   end
 end
