@@ -14,8 +14,8 @@ defmodule Sass.Mixfile do
       description: description,
       compilers: [:elixir_make] ++ Mix.compilers,
       make_clean: ["clean"],
-      docs: [logo: "path/to/logo.png",
-          extras: ["README.md", "CONTRIBUTING.md"]],
+      docs: [logo: "assets/sass.png",
+          extras: ["README.md"]],
       name: "Libbsass.ex",
       source_url: "https://github.com/scottdavis/sass.ex",
       homepage_url: "https://github.com/scottdavis/sass.ex"
