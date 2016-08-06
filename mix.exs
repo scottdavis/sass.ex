@@ -27,13 +27,15 @@ defmodule Libsass.Mixfile do
 
   defp package do
     [
+      maintainers: ["Scott Davis"],
+      licenses: ["MIT"],
       contributors: ["Scott Davis"],
       license:      "MIT",
-      links: [
-        { GitHub: "https://github.com/scottdavis/libsass.ex" },
-        { Issues: "https://github.com/scottdavis/libsass.ex/issues" },
-        { Source:, "https://github.com/scottdavis/libsass.ex" }
-      ],
+      links: %{
+        GitHub: "https://github.com/scottdavis/libsass.ex",
+        Issues: "https://github.com/scottdavis/libsass.ex/issues",
+        Source: "https://github.com/scottdavis/libsass.ex"
+      },
       files: [
         "lib",
         "src",
@@ -49,6 +51,7 @@ defmodule Libsass.Mixfile do
 
   defp deps(:docs) do
     #[{ :ex_doc, github: "elixir-lang/ex_doc" }]
+    {:ex_doc, ">= 0.0.0", only: :dev}
   end
 
   defp deps(_) do
