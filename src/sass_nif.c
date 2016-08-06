@@ -5,8 +5,6 @@
 #include <stdio.h>
 #include "erl_nif.h"
 
-
-
 static inline ERL_NIF_TERM make_atom(ErlNifEnv* env, const char* name)
 {
   ERL_NIF_TERM ret;
@@ -15,7 +13,7 @@ static inline ERL_NIF_TERM make_atom(ErlNifEnv* env, const char* name)
   }
   return enif_make_atom(env, name);
 }
-
+// create tuple used to return compiled sass results
 static inline ERL_NIF_TERM make_tuple(ErlNifEnv* env, const char* mesg, const char* atom_string)
 {
   int output_len = sizeof(char) * strlen(mesg);
@@ -26,7 +24,7 @@ static inline ERL_NIF_TERM make_tuple(ErlNifEnv* env, const char* mesg, const ch
   ERL_NIF_TERM str = enif_make_binary(env, &output_binary);
   return enif_make_tuple2(env, atom, str);
 }
-
+// Size of elixir charlist string
 static int my_enif_list_size(ErlNifEnv* env, ERL_NIF_TERM list)
 {
   ERL_NIF_TERM head, tail, nexttail;
@@ -39,6 +37,7 @@ static int my_enif_list_size(ErlNifEnv* env, ERL_NIF_TERM list)
   }
   return size;
 }
+// converts a Elixir charlist into a c string
 static char* my_enif_get_string(ErlNifEnv *env, ERL_NIF_TERM list)
 {
   char *buf;
@@ -56,6 +55,7 @@ static char* my_enif_get_string(ErlNifEnv *env, ERL_NIF_TERM list)
   return buf;
 }
 
+// Get atom name as a string.
 char* get_atom_string(ErlNifEnv *env, ERL_NIF_TERM atom) {
         unsigned atom_size = 0;
         char *string = NULL;
@@ -68,6 +68,7 @@ char* get_atom_string(ErlNifEnv *env, ERL_NIF_TERM atom) {
         return string;
 }
 
+// Get a boolean true or false from there atom representations
 bool get_bool_from_atom(ErlNifEnv *env, ERL_NIF_TERM atom) {
 
         char *_bool = get_atom_string(env, atom);
@@ -111,6 +112,9 @@ bool get_bool_from_atom(ErlNifEnv *env, ERL_NIF_TERM atom) {
 #define SASS_LINEFEED_WINDOWS "windows"
 #define SASS_LINEFEED_UNIX "unix"
 
+
+// This function parses and sets sass optiosn on the libsass contenxt
+// Note not all options are implimented at this time see the constant definitions above
 struct Sass_Options* parse_sass_options(ErlNifEnv *env, Sass_Context *context, ERL_NIF_TERM map) {
     ERL_NIF_TERM key, value;
 
@@ -211,6 +215,9 @@ struct Sass_Options* parse_sass_options(ErlNifEnv *env, Sass_Context *context, E
     return options;
 }
 
+// NIF for compiling a sass string arguments are
+// * string sass_string
+// * Map sass_options
 static ERL_NIF_TERM sass_compile_nif(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
   ERL_NIF_TERM ret;
@@ -262,7 +269,9 @@ static ERL_NIF_TERM sass_compile_nif(ErlNifEnv* env, int argc, const ERL_NIF_TER
 
   return ret;
 }
-
+// NIF for compiling a sass file arguments are
+// * string filename
+// * Map sass_options
 static ERL_NIF_TERM sass_compile_file_nif(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
   ERL_NIF_TERM ret;
