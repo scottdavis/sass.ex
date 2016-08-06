@@ -6,7 +6,7 @@ defmodule Libsass.Mixfile do
   def project do
     [
       app:         :libsass,
-      version:     "3.3.6",
+      version:     "1.0.0",
       elixir:      "~> 1.3.0",
       compilers:   [:sass, :elixir, :app],
       deps:        deps(Mix.env),
@@ -30,9 +30,9 @@ defmodule Libsass.Mixfile do
       contributors: ["Scott Davis"],
       license:      "MIT",
       links: [
-        { "GitHub", "https://github.com/scottdavis/libsass.ex" },
-        { "Issues", "https://github.com/scottdavis/libsass.ex/issues" },
-        { "Source (sass/libsass)", "https://github.com/sass/libsass" }
+        { GitHub: "https://github.com/scottdavis/libsass.ex" },
+        { Issues: "https://github.com/scottdavis/libsass.ex/issues" },
+        { Source:, "https://github.com/scottdavis/libsass.ex" }
       ],
       files: [
         "lib",
@@ -48,7 +48,7 @@ defmodule Libsass.Mixfile do
   end
 
   defp deps(:docs) do
-    [{ :ex_doc, github: "elixir-lang/ex_doc" }]
+    #[{ :ex_doc, github: "elixir-lang/ex_doc" }]
   end
 
   defp deps(_) do
