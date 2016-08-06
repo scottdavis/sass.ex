@@ -1,6 +1,6 @@
-defmodule Libsass.Compiler do
+defmodule Sass.Compiler do
   @moduledoc """
-    Connection to the NIF for libsass
+    Connection to the NIF for sass
   """
 
   @on_load { :init, 0 }
@@ -9,7 +9,7 @@ defmodule Libsass.Compiler do
     Loads the sass.so library
   """
   def init do
-    path = :filename.join(:code.priv_dir(:libsass), 'sass_nif')
+    path = :filename.join(:code.priv_dir(:sass), 'sass_nif')
     :ok = :erlang.load_nif(path, 0)
   end
 

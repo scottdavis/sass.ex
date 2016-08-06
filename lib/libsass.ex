@@ -1,4 +1,4 @@
-defmodule Libsass do
+defmodule Sass do
   @moduledoc """
     Compiles SASS into CSS
   """
@@ -8,7 +8,7 @@ defmodule Libsass do
   """
   def compile(string, options \\ %{output_style: sass_style_nested}) do
     sass = string |> String.strip
-    Libsass.Compiler.compile(sass, options)
+    Sass.Compiler.compile(sass, options)
   end
 
   @doc """
@@ -16,7 +16,7 @@ defmodule Libsass do
   """
   def compile_file(path, options \\ %{output_style: sass_style_nested}) do
     filename = path |> String.strip
-    Libsass.Compiler.compile_file(filename, options)
+    Sass.Compiler.compile_file(filename, options)
   end
 
   def sass_style_nested, do: 0

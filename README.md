@@ -1,5 +1,5 @@
-# Libsass.ex
-Libsass 3.3.6 bindings for elixir
+# Sass.ex
+Sass 3.3.6 bindings for elixir
 ## Use
 
 ```shell

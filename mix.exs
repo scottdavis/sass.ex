@@ -1,11 +1,11 @@
-Code.require_file "lib/mix/tasks/compile.libsass.ex"
+Code.require_file "lib/mix/tasks/compile.sass.ex"
 
-defmodule Libsass.Mixfile do
+defmodule Sass.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app:         :libsass,
+      app:         :sass,
       version:     "1.0.0",
       elixir:      "~> 1.3.0",
       compilers:   [:sass, :elixir, :app],
@@ -17,8 +17,8 @@ defmodule Libsass.Mixfile do
       docs: [logo: "path/to/logo.png",
           extras: ["README.md", "CONTRIBUTING.md"]],
       name: "Libbsass.ex",
-      source_url: "https://github.com/scottdavis/libsass.ex",
-      homepage_url: "https://github.com/scottdavis/libsass.ex"
+      source_url: "https://github.com/scottdavis/sass.ex",
+      homepage_url: "https://github.com/scottdavis/sass.ex"
     ]
   end
 
@@ -26,7 +26,7 @@ defmodule Libsass.Mixfile do
 
   defp description do
     """
-    Libsass for elixir
+    Sass for elixir
     """
   end
 
@@ -37,14 +37,14 @@ defmodule Libsass.Mixfile do
       contributors: ["Scott Davis"],
       license:      "MIT",
       links: %{
-        GitHub: "https://github.com/scottdavis/libsass.ex",
-        Issues: "https://github.com/scottdavis/libsass.ex/issues",
-        Source: "https://github.com/scottdavis/libsass.ex"
+        GitHub: "https://github.com/scottdavis/sass.ex",
+        Issues: "https://github.com/scottdavis/sass.ex/issues",
+        Source: "https://github.com/scottdavis/sass.ex"
       },
       files: [
         "lib",
         "src",
-        "libsass_src",
+        "sass_src",
         "priv",
         "Makefile",
         "mix.exs",

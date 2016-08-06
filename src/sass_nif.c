@@ -113,7 +113,7 @@ bool get_bool_from_atom(ErlNifEnv *env, ERL_NIF_TERM atom) {
 #define SASS_LINEFEED_UNIX "unix"
 
 
-// This function parses and sets sass optiosn on the libsass contenxt
+// This function parses and sets sass optiosn on the sass contenxt
 // Note not all options are implimented at this time see the constant definitions above
 struct Sass_Options* parse_sass_options(ErlNifEnv *env, Sass_Context *context, ERL_NIF_TERM map) {
     ERL_NIF_TERM key, value;
@@ -329,4 +329,4 @@ static ErlNifFunc nif_funcs[] = {
   { "compile_file", 2, sass_compile_file_nif, 0 },
 };
 
-ERL_NIF_INIT(Elixir.Libsass.Compiler, nif_funcs, NULL, NULL, NULL, NULL);
+ERL_NIF_INIT(Elixir.Sass.Compiler, nif_funcs, NULL, NULL, NULL, NULL);
