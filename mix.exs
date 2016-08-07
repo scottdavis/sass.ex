@@ -6,7 +6,7 @@ defmodule Sass.Mixfile do
   def project do
     [
       app:         :sass,
-      version:     "1.0.3",
+      version:     "1.0.6",
       elixir:      "~> 1.3.0",
       compilers:   [:sass, :elixir, :app],
       deps:        deps(),
@@ -39,7 +39,20 @@ defmodule Sass.Mixfile do
         GitHub: "https://github.com/scottdavis/sass.ex",
         Issues: "https://github.com/scottdavis/sass.ex/issues",
         Source: "https://github.com/scottdavis/sass.ex"
-      }
+      },
+      files: files
+    ]
+  end
+
+  defp files do
+    [
+      'lib/**/*',
+      'src/*.c',
+      'mix.exs',
+      'LICENSE',
+      'README.*',
+      'Makefile'
+
     ]
   end
 
