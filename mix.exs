@@ -16,7 +16,7 @@ defmodule Sass.Mixfile do
       make_clean: ["clean"],
       docs: [logo: "assets/sass.png",
           extras: ["README.md"]],
-      name: "Libbsass.ex",
+      name: "Sass.ex",
       source_url: "https://github.com/scottdavis/sass.ex",
       homepage_url: "https://github.com/scottdavis/sass.ex"
     ]
@@ -56,7 +56,9 @@ defmodule Sass.Mixfile do
 
   defp deps do
     [
-      {:ex_doc, "~> 0.12", only: :docs}
+      {:markdown, github: "devinus/markdown"},
+      {:ex_doc, "0.13.0", only: :docs},
+      {:inch_ex, "~> 0.2", only: :docs},
     ]
   end
 end
