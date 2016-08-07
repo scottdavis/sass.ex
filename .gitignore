@@ -9,4 +9,4 @@ deps/*
 docs/*
 ebin/*
 erl_crash.dump
-/priv/sass.so*
+/priv/sass_nif.so*
