@@ -1,61 +1,3 @@
-#ERLANG_PATH:=$(shell erl -eval 'io:format("~s~n", [lists:concat([code:root_dir(), "/erts-", erlang:system_info(version), "/include"])])' -s init stop -noshell)
-#CFLAGS_SASS=-g -fPIC -O3
-#CFLAGS=$(CFLAGS_SASS) $(ERLANG_FLAGS) -Ilibsass_src -Ilibsass_src/include -Llibsass_src/lib -lsass -fPIC -static -fPIC
-#ERLANG_FLAGS=-I$(ERLANG_PATH)
-#CC ?= $(CROSSCOMPILER)gcc
-#EBIN_DIR=ebin
-
-#ifeq ($(shell uname),Darwin)
-	#OPTIONS=-dynamiclib -undefined dynamic_lookup
-#endif
-
-#NIF_SRC= src/sass_nif.c
-#SASS_DIR=libsass_src
-#SASS_LIB=libsass.a
-
-#all: sass_ex
-
-#priv/sass.so: ${NIF_SRC}
-	#$(MAKE) -C $(SASS_DIR) -j5
-	#$(CC) $(CFLAGS) $(OPTIONS) $(NIF_SRC) -o $@ 2>&1 >/dev/null
-
-#sass_ex:
-	#mix compile
-
-#$(SASS_LIB):
-	#git submodule update --init && \
-	#cd libsass_src && \
-	#git submodule update --init && \
-	#CFLAGS="$(CFLAGS_SASS)" $(MAKE) 2>&1 >/dev/null
-
-#libsass_src/configure.sh:
-	#git submodule update --init
-	#./configure
-
-#libsass_src-clean:
-	#test ! -f $(SASS_LIB) || \
-	  #($(MAKE) -C $(SASS_DIR) clean)
-
-#sass_ex-clean:
-	#rm -rf $(EBIN_DIR) test/tmp share/* _build
-
-#sass_nif-clean:
-	#rm -rf priv/sass.*
-
-#docs:
-	#MIX_ENV=docs mix do clean, deps.get, compile, docs
-
-#docs-clean:
-	#rm -rf docs
-
-#test:
-	#MIX_ENV=test mix do clean, deps.get, compile, test
-
-#clean: libsass_src-clean sass_ex-clean sass_nif-clean docs-clean
-
-#.PHONY: all sass_ex clean distclean libsass_src-clean libsass_src-distclean test
-
-
 # Variables to override
 #
 # CC            C compiler
@@ -78,12 +20,12 @@ ERL_EI_INCLUDE_DIR = "$(ERL_ROOT_DIR)/usr/include"
 ERL_EI_LIBDIR = "$(ERL_ROOT_DIR)/usr/lib"
 endif
 
-SASS_DIR=libsass_src
+SASS_DIR=deps/libsass
 SASS_LIB=libsass.a
 
 # Set Erlang-specific compile and linker flags
-ERL_CFLAGS ?= -I$(ERL_EI_INCLUDE_DIR) -Llibsass_src/lib -lsass -Ilibsass_src -Ilibsass_src/include
-ERL_LDFLAGS ?= -Ilibsass_src -Ilibsass_src/include -Llibsass_src/lib
+ERL_CFLAGS ?= -I$(ERL_EI_INCLUDE_DIR) -Ldeps/libsass/lib -lsass -Ideps/libsass -Ideps/libsass/include
+ERL_LDFLAGS ?= -Ideps/libsass -Ideps/libsass/include -Ldeps/libsass/lib
 
 LDFLAGS += -fPIC -shared
 CFLAGS ?= -fPIC -O2 -Wall -Wextra -Wno-unused-parameter
