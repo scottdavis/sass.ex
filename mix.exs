@@ -6,7 +6,7 @@ defmodule Sass.Mixfile do
   def project do
     [
       app:         :sass,
-      version:     "1.0.0",
+      version:     "1.0.1",
       elixir:      "~> 1.3.0",
       compilers:   [:sass, :elixir, :app],
       deps:        deps(),
