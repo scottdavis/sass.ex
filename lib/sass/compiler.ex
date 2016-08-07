@@ -8,8 +8,10 @@ defmodule Sass.Compiler do
   @doc """
     Loads the sass.so library
   """
+  app = Mix.Project.config[:app]
+
   def init do
-    path = :filename.join(:code.priv_dir(:sass), 'sass_nif')
+    path = :filename.join(:code.priv_dir(unquote(app)), 'sass_nif')
     :ok = :erlang.load_nif(path, 0)
   end
 
