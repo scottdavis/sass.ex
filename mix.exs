@@ -56,6 +56,7 @@ defmodule Sass.Mixfile do
 
   defp deps do
     [
+      {:libsass, github: "sass/libsass", tag: "3.3.6", app: false},
       {:markdown, github: "devinus/markdown"},
       {:ex_doc, "0.13.0", only: :docs},
       {:inch_ex, "~> 0.2", only: :docs},
