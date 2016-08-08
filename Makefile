@@ -20,12 +20,12 @@ ERL_EI_INCLUDE_DIR = "$(ERL_ROOT_DIR)/usr/include"
 ERL_EI_LIBDIR = "$(ERL_ROOT_DIR)/usr/lib"
 endif
 
-SASS_DIR=deps/libsass
+SASS_DIR=libsass
 SASS_LIB=libsass.a
 
 # Set Erlang-specific compile and linker flags
-ERL_CFLAGS ?= -I$(ERL_EI_INCLUDE_DIR) -Ldeps/libsass/lib -lsass -Ideps/libsass -Ideps/libsass/include
-ERL_LDFLAGS ?= -Ideps/libsass -Ideps/libsass/include -Ldeps/libsass/lib
+ERL_CFLAGS ?= -I$(ERL_EI_INCLUDE_DIR) -Llibsass/lib -lsass -Ilibsass -Ilibsass/include
+ERL_LDFLAGS ?= -Ilibsass -Ilibsass/include -Llibsass/lib
 
 LDFLAGS += -fPIC -shared
 CFLAGS ?= -fPIC -O2 -Wall -Wextra -Wno-unused-parameter

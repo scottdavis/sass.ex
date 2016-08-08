@@ -6,7 +6,7 @@ defmodule Sass.Mixfile do
   def project do
     [
       app:         :sass,
-      version:     "1.0.8",
+      version:     "1.0.9",
       elixir:      "~> 1.3.0",
       compilers:   [:sass, :elixir, :app],
       deps:        deps(),
@@ -46,6 +46,7 @@ defmodule Sass.Mixfile do
 
   defp files do
     [
+      'libsass',
       'lib/**/*',
       'src/*.c',
       'mix.exs',
@@ -58,7 +59,6 @@ defmodule Sass.Mixfile do
 
   defp deps do
     [
-      {:libsass, github: "sass/libsass", tag: "3.3.6", only: :prod, app: false, optional: false},
       {:markdown, github: "devinus/markdown", only: :docs},
       {:ex_doc, "0.13.0", only: :docs},
       {:inch_ex, "~> 0.2", only: :docs},
