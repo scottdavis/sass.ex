@@ -9,20 +9,11 @@ defmodule Sass.Compiler do
     Mix.Project.config[:app]
   end
 
-  defp path do
-    case :code.priv_dir(app) do
-      {:error, :bad_name} ->
-        :filename.join [:filename.dirname(:code.which(app)), '..', 'priv']
-      dir ->
-        dir
-    end
-  end
-
   @doc """
     Loads the sass.so library
   """
   def init do
-    :ok = :erlang.load_nif(:filename.join(path, 'sass_nif'), 0)
+    :ok = :erlang.load_nif(nif_path, 0)
   end
 
   @doc """
@@ -38,5 +29,27 @@ defmodule Sass.Compiler do
   def compile_file(_,_) do
     exit(:nif_library_not_loaded)
   end
+
+  @doc false
+  defp nif_path,
+    do: :filename.join(priv_dir(), 'sass_nif')
+
+  @doc false
+  defp priv_dir do
+    app
+    |> :code.priv_dir
+    |> maybe_priv_dir
+  end
+
+  @doc false
+  defp maybe_priv_dir({:error, _}) do
+    app
+    |> :code.which
+    |> :filename.dirname
+    |> :filename.dirname
+    |> :filename.join('priv')
+  end
+  defp maybe_priv_dir(path),
+    do: path
 
 end
