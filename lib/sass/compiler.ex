@@ -4,9 +4,10 @@ defmodule Sass.Compiler do
   """
 
   @on_load { :init, 0 }
+  @nifname 'sass_nif'
 
   defp app do
-    Mix.Project.config[:app]
+    :sass
   end
 
   @doc """
@@ -31,25 +32,17 @@ defmodule Sass.Compiler do
   end
 
   @doc false
-  defp nif_path,
-    do: :filename.join(priv_dir(), 'sass_nif')
-
-  @doc false
-  defp priv_dir do
-    app
-    |> :code.priv_dir
-    |> maybe_priv_dir
+  defp nif_path do
+    case :code.priv_dir(app) do
+      {:error, :bad_name} ->
+        case :filelib.is_dir(:filename.join(['..', '..', 'priv'])) do
+          true ->
+            :filename.join(['..', '..', 'priv', @nifname])
+          _ ->
+            :filename.join(['priv', @nifname])
+        end
+      dir ->
+        :filename.join(dir, @nifname)
+    end
   end
-
-  @doc false
-  defp maybe_priv_dir({:error, _}) do
-    app
-    |> :code.which
-    |> :filename.dirname
-    |> :filename.dirname
-    |> :filename.join('priv')
-  end
-  defp maybe_priv_dir(path),
-    do: path
-
 end
