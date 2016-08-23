@@ -66,6 +66,11 @@ defmodule Sass do
   end
 
   @doc """
+    Returns current sass version
+  """
+  def version, do: Sass.Compiler.version
+
+  @doc """
     Sass option value for sass output style [nested](http://sass-lang.com/documentation/file.SASS_REFERENCE.html#_13)
   """
   def sass_style_nested, do: 0

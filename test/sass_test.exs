@@ -44,4 +44,9 @@ defmodule SassTest do
     assert Regex.match?(~r/height: 100%;/, result)
     assert Regex.match?(~r/bar: baz;/, result)
   end
+
+
+  test "version" do
+    assert Sass.version == "3.3.6"
+  end
 end

@@ -125,46 +125,46 @@ struct Sass_Options* parse_sass_options(ErlNifEnv *env, Sass_Context *context, E
         enif_raise_exception(env, exception);
     }
     // output style
-    key = enif_make_atom(env, SASS_OUTPUT_STYLE);
+    key = make_atom(env, SASS_OUTPUT_STYLE);
     if (enif_get_map_value(env, map, key, &value)) {
         int output_style;
         enif_get_int(env, value, &output_style);
         sass_option_set_output_style(options, (Sass_Output_Style)output_style);
     }
     // precision
-    key = enif_make_atom(env, SASS_PRECISION);
+    key = make_atom(env, SASS_PRECISION);
     if (enif_get_map_value(env, map, key, &value)) {
         int precision;
         enif_get_int(env, value, &precision);
         sass_option_set_precision(options, precision);
     }
     // source comments
-    key = enif_make_atom(env, SASS_SOURCE_COMMENTS);
+    key = make_atom(env, SASS_SOURCE_COMMENTS);
     if (enif_get_map_value(env, map, key, &value)) {
         sass_option_set_source_comments(options, get_bool_from_atom(env, value));
     }
     // source map embed
-    key = enif_make_atom(env, SASS_SOURCE_MAP_EMBED);
+    key = make_atom(env, SASS_SOURCE_MAP_EMBED);
     if (enif_get_map_value(env, map, key, &value)) {
         sass_option_set_source_map_embed(options, get_bool_from_atom(env, value));
     }
     // source map contents
-    key = enif_make_atom(env, SASS_SOURCE_MAP_CONTENTS);
+    key = make_atom(env, SASS_SOURCE_MAP_CONTENTS);
     if (enif_get_map_value(env, map, key, &value)) {
         sass_option_set_source_map_contents(options, get_bool_from_atom(env, value));
     }
     // omit source map url
-    key = enif_make_atom(env, SASS_OMIT_SOURCE_MAP_URL);
+    key = make_atom(env, SASS_OMIT_SOURCE_MAP_URL);
     if (enif_get_map_value(env, map, key, &value)) {
         sass_option_set_omit_source_map_url(options, get_bool_from_atom(env, value));
     }
     // is indented syntax
-    key = enif_make_atom(env, SASS_IS_INDENTED_SYNTAX);
+    key = make_atom(env, SASS_IS_INDENTED_SYNTAX);
     if (enif_get_map_value(env, map, key, &value)) {
         sass_option_set_is_indented_syntax_src(options, get_bool_from_atom(env, value));
     }
     // indent
-    key = enif_make_atom(env, SASS_INDENT);
+    key = make_atom(env, SASS_INDENT);
     if (enif_get_map_value(env, map, key, &value)) {
         if (strcmp(get_atom_string(env, value), SASS_INDENT_TAB_ATOM) == 0) {
             sass_option_set_linefeed(options, SASS_INDENT_TAB);
@@ -173,7 +173,7 @@ struct Sass_Options* parse_sass_options(ErlNifEnv *env, Sass_Context *context, E
         }
     }
     // linefeed
-    key = enif_make_atom(env, SASS_LINEFEED);
+    key = make_atom(env, SASS_LINEFEED);
     if (enif_get_map_value(env, map, key, &value)) {
         char *val = get_atom_string(env, value);
         if (strcmp(val, SASS_LINEFEED_WINDOWS) == 0) {
@@ -186,7 +186,7 @@ struct Sass_Options* parse_sass_options(ErlNifEnv *env, Sass_Context *context, E
         }
     }
     // include paths
-    key = enif_make_atom(env, SASS_INCLUDE_PATHS);
+    key = make_atom(env, SASS_INCLUDE_PATHS);
     if (enif_get_map_value(env, map, key, &value)) {
         ERL_NIF_TERM head;
         if (!enif_is_list(env, value)) {
@@ -324,9 +324,21 @@ static ERL_NIF_TERM sass_compile_file_nif(ErlNifEnv* env, int argc, const ERL_NI
   return ret;
 }
 
+static ERL_NIF_TERM sass_version(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]) {
+  const char *version = libsass_version();
+  int output_len = sizeof(char) * strlen(version);
+  ErlNifBinary output_binary;
+  enif_alloc_binary(output_len, &output_binary);
+  strncpy((char*)output_binary.data, version, output_len);
+  ERL_NIF_TERM str = enif_make_binary(env, &output_binary);
+  return str;
+
+}
+
 static ErlNifFunc nif_funcs[] = {
   { "compile", 2, sass_compile_nif, 0 },
   { "compile_file", 2, sass_compile_file_nif, 0 },
+  { "version", 0, sass_version, 0 }
 };
 
 ERL_NIF_INIT(Elixir.Sass.Compiler, nif_funcs, NULL, NULL, NULL, NULL);
