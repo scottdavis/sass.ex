@@ -1,14 +1,12 @@
-Code.require_file "lib/mix/tasks/compile.sass.ex"
-
 defmodule Sass.Mixfile do
   use Mix.Project
 
   def project do
     [
       app:         :sass,
-      version:     "1.0.15",
+      version:     "1.0.16",
       elixir:      "~> 1.3.0",
-      compilers:   [:sass, :elixir, :app],
+      compilers:   [:elixir_make] ++ Mix.compilers,
       deps:        deps(),
       package:     package,
       description: description,
@@ -59,6 +57,7 @@ defmodule Sass.Mixfile do
 
   defp deps do
     [
+      {:elixir_make, "~> 0.3.0"},
       {:markdown, github: "devinus/markdown", only: :docs},
       {:ex_doc, "0.13.0", only: :docs},
       {:inch_ex, "~> 0.2", only: :docs},
