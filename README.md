@@ -17,9 +17,9 @@ Sass.compile_file "test/sample_scss.scss"
 
 ## License
 
-[MIT/X11](./LICENSE)
+[MIT](./LICENSE)
 
-Copyright (c) 2014 Daniel Farrell
+Copyright (c) 2016 Scott Davis
 
 ## Credit
 
