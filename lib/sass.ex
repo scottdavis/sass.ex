@@ -37,8 +37,8 @@ defmodule Sass do
 
   """
 
-  def compile(string, options \\ %{output_style: sass_style_nested}) do
-    sass = string |> String.strip
+  def compile(string, options \\ %{output_style: sass_style_nested()}) do
+    sass = string |> String.trim
     Sass.Compiler.compile(sass, options)
   end
 
@@ -60,8 +60,8 @@ defmodule Sass do
       #=> "a{color:#fff;}"
 
   """
-  def compile_file(path, options \\ %{output_style: sass_style_nested}) do
-    filename = path |> String.strip
+  def compile_file(path, options \\ %{output_style: sass_style_nested()}) do
+    filename = path |> String.trim
     Sass.Compiler.compile_file(filename, options)
   end
 

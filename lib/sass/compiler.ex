@@ -14,7 +14,7 @@ defmodule Sass.Compiler do
     Loads the sass.so library
   """
   def init do
-    :ok = :erlang.load_nif(nif_path, 0)
+    :ok = :erlang.load_nif(nif_path(), 0)
   end
 
   @doc """
@@ -40,7 +40,7 @@ defmodule Sass.Compiler do
 
   @doc false
   defp nif_path do
-    case :code.priv_dir(app) do
+    case :code.priv_dir(app()) do
       {:error, :bad_name} ->
         case :filelib.is_dir(:filename.join(['..', '..', 'priv'])) do
           true ->

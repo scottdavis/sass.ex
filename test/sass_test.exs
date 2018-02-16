@@ -5,21 +5,21 @@ defmodule SassTest do
 
   test "Sass.compile/1 compiles a SCSS string to CSS" do
     { :ok, expected_css } = File.read("test/sample_scss.css")
-    { :ok, result_css }   = scss_string |> Sass.compile
+    { :ok, result_css }   = scss_string() |> Sass.compile
 
     assert expected_css == result_css
   end
 
   test "Sass.compile/1 compiles a SCSS string to CSS with output style expanded" do
     { :ok, expected_css } = File.read("test/expanded.css")
-    { :ok, result_css }   = Sass.compile(scss_string, %{output_style: Sass.sass_style_expanded})
+    { :ok, result_css }   = Sass.compile(scss_string(), %{output_style: Sass.sass_style_expanded})
 
     assert expected_css == result_css
   end
   
   test "Sass.compile/1 compiles a SCSS string to CSS with output style compact" do
     { :ok, expected_css } = File.read("test/compact.css")
-    { :ok, result_css }   = Sass.compile(scss_string, %{output_style: Sass.sass_style_compact})
+    { :ok, result_css }   = Sass.compile(scss_string(), %{output_style: Sass.sass_style_compact})
 
     assert expected_css == result_css
   end

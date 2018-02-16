@@ -5,11 +5,10 @@ defmodule Sass.Mixfile do
     [
       app:         :sass,
       version:     "1.0.17",
-      elixir:      "~> 1.3.0",
       compilers:   [:elixir_make] ++ Mix.compilers,
       deps:        deps(),
-      package:     package,
-      description: description,
+      package:     package(),
+      description: description(),
       make_clean: ["clean"],
       docs: [logo: "assets/sass.png",
           extras: ["README.md"]],
@@ -38,7 +37,7 @@ defmodule Sass.Mixfile do
         Issues: "https://github.com/scottdavis/sass.ex/issues",
         Source: "https://github.com/scottdavis/sass.ex"
       },
-      files: files
+      files: files()
     ]
   end
 
