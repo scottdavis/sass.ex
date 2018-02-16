@@ -4,7 +4,7 @@ defmodule Sass.Mixfile do
   def project do
     [
       app:         :sass,
-      version:     "1.0.17",
+      version:     "1.0.18",
       compilers:   [:elixir_make] ++ Mix.compilers,
       deps:        deps(),
       package:     package(),
@@ -57,9 +57,9 @@ defmodule Sass.Mixfile do
   defp deps do
     [
       {:elixir_make, "~> 0.3.0"},
-      {:markdown, github: "devinus/markdown", only: :docs},
-      {:ex_doc, "0.13.0", only: :docs},
-      {:inch_ex, "~> 0.2", only: :docs},
+      {:markdown, github: "devinus/markdown", only: :dev},
+      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:inch_ex, "~> 0.2", only: :dev}
     ]
   end
 end
