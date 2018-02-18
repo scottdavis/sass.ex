@@ -4,7 +4,7 @@ defmodule Sass.Mixfile do
   def project do
     [
       app:         :sass,
-      version:     "1.0.19",
+      version:     "1.0.20",
       compilers:   [:elixir_make] ++ Mix.compilers,
       deps:        deps(),
       package:     package(),
@@ -42,16 +42,13 @@ defmodule Sass.Mixfile do
   end
 
   defp files do
-    [
-      'libsass',
-      'lib/**/*',
-      'src/*.c',
-      'mix.exs',
-      'LICENSE',
-      'README.*',
-      'Makefile'
+    compiled_file = ~r/\.(a|o|so|tar|tar|gz)$/
+    build_dir = ~r/(_build|priv|deps)/
 
-    ]
+    Path.wildcard("**/*")
+      |> Enum.reject(fn(file) ->
+        Regex.match?(compiled_file, file) || Regex.match?(build_dir, file) || file == "" || File.dir?(file)
+      end)
   end
 
   defp deps do
