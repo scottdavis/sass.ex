@@ -32,9 +32,9 @@ CFLAGS ?= -fPIC -O2 -Wall -Wextra -Wno-unused-parameter
 CC= $(CROSSCOMPILER)g++
 
 ifeq ($(CROSSCOMPILE),)
-ifeq ($(shell uname),Darwin)
-LDFLAGS += -undefined dynamic_lookup
-endif
+	ifeq ($(shell uname),Darwin)
+			LDFLAGS += -undefined dynamic_lookup
+	endif
 endif
 
 NPROCS := 1
@@ -45,6 +45,8 @@ ifeq ($J,)
 
 ifeq ($(OS),Linux)
   NPROCS := $(shell grep -c ^processor /proc/cpuinfo)
+else ifeq ($(OS),Darwin)
+	NPROCS := $(shell sysctl -n hw.logicalcpu)
 endif # $(OS)
 
 else
@@ -72,5 +74,5 @@ libsass_src-clean:
 	$(MAKE) -C $(SASS_DIR) clean
 
 libsass_src-make:
-	$(MAKE) -C $(SASS_DIR) -j $(NPROCS)
+	$(MAKE) -C $(SASS_DIR) -j $(NPROCS) -s
 
