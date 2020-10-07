@@ -55,7 +55,7 @@ defmodule Sass.Mixfile do
     [
       {:elixir_make, "~> 0.3.0"},
       {:markdown, github: "devinus/markdown", only: :dev},
-      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:ex_doc, "~> 0.19", only: :dev},
       {:inch_ex, "~> 0.2", only: :dev}
     ]
   end
